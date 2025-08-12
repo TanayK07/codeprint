@@ -1,0 +1,30 @@
+name: gemini-scanner
+version: '2.0.0'
+summary: A powerful cross-platform tool for creating AI-ready project snapshots
+description: |
+  Gemini Scanner is a high-performance, cross-platform CLI tool that creates
+  comprehensive snapshots of your codebase for use with AI assistants like
+  ChatGPT, Claude, and Gemini. It automatically detects project types,
+  respects .gitignore rules, and generates output in multiple formats.
+
+grade: stable
+confinement: strict
+base: core20
+
+apps:
+  gemini-scanner:
+    command: bin/gemini
+    plugs:
+      - home
+      - removable-media
+      - network
+
+parts:
+  gemini-scanner:
+    plugin: python
+    source: .
+    python-packages:
+      - colorama
+      - pyperclip
+    stage-packages:
+      - python3-minimal

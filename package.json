@@ -1,0 +1,41 @@
+{
+  "name": "gemini-scanner",
+  "version": "2.0.0",
+  "description": "A powerful cross-platform tool for creating AI-ready project snapshots",
+  "main": "index.js",
+  "bin": {
+    "gemini": "./bin/gemini.js",
+    "gemini-scanner": "./bin/gemini.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/gemini-scanner.git"
+  },
+  "keywords": [
+    "project-scanner",
+    "code-snapshot",
+    "ai-tools",
+    "prompt-engineering",
+    "cli-tool"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/gemini-scanner/issues"
+  },
+  "homepage": "https://github.com/yourusername/gemini-scanner#readme",
+  "dependencies": {
+    "chalk": "^5.0.0",
+    "commander": "^9.0.0",
+    "clipboardy": "^3.0.0",
+    "node-fetch": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "preferGlobal": true
+}
