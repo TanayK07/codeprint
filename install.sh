@@ -2,7 +2,7 @@
 
 set -e
 
-REPO="https://github.com/yourusername/codeprint"
+REPO="https://github.com/Tanayk07/codeprint"
 VERSION="2.0.0"
 
 # Colors for output
@@ -38,21 +38,21 @@ check_python() {
 # Install using pip
 install_pip() {
     echo -e "${GREEN}Installing via pip...${NC}"
-    pip install codeprint
+    pip install codeprintio
 }
 
 # Install using npm
 install_npm() {
     echo -e "${GREEN}Installing via npm...${NC}"
-    npm install -g codeprint
+    npm install -g codeprintio
 }
 
 # Install on macOS
 install_macos() {
     if command -v brew &> /dev/null; then
         echo -e "${GREEN}Installing via Homebrew...${NC}"
-        brew tap yourusername/codeprint
-        brew install codeprint
+        brew tap Tanayk07/codeprint
+        brew install codeprintio
     else
         install_pip
     fi
@@ -71,7 +71,7 @@ install_linux() {
         install_pip
     elif command -v snap &> /dev/null; then
         echo -e "${GREEN}Installing via Snap...${NC}"
-        sudo snap install codeprint
+        sudo sudo snap install codeprintio
     else
         install_pip
     fi
@@ -81,10 +81,10 @@ install_linux() {
 install_windows() {
     if command -v choco &> /dev/null; then
         echo -e "${GREEN}Installing via Chocolatey...${NC}"
-        choco install codeprint
+        choco install codeprintio
     elif command -v winget &> /dev/null; then
         echo -e "${GREEN}Installing via WinGet...${NC}"
-        winget install codeprint
+        winget install codeprintio
     else
         install_pip
     fi
@@ -128,7 +128,7 @@ main() {
     
     echo ""
     echo -e "${GREEN}✅ Installation complete!${NC}"
-    echo -e "Run ${YELLOW}gemini --help${NC} to get started."
+    echo -e "Run ${YELLOW}codeprint --help${NC} to get started."
 }
 
 # Run main function

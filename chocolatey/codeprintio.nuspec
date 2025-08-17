@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
-    <id>gemini-scanner</id>
+    <id>codeprintio</id>
     <version>2.0.0</version>
-    <title>Gemini Scanner</title>
-    <authors>Your Name</authors>
-    <owners>Your Name</owners>
+    <title>CodePrint IO</title>
+    <authors>Tanay Kedia</authors>
+    <owners>Tanay Kedia</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
-    <projectUrl>https://github.com/yourusername/gemini-scanner</projectUrl>
+    <projectUrl>https://github.com/Tanayk07/codeprint</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/yourusername/gemini-scanner/main/icon.png</iconUrl>
     <description>A powerful cross-platform tool for creating AI-ready project snapshots</description>
-    <releaseNotes>https://github.com/yourusername/gemini-scanner/releases</releaseNotes>
+    <releaseNotes>https://github.com/Tanayk07/codeprint/releases</releaseNotes>
     <tags>cli development tools scanner</tags>
     <dependencies>
       <dependency id="python3" version="3.9.0" />

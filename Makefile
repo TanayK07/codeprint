@@ -11,15 +11,15 @@ install:
 	@$(PIP) install --user colorama pyperclip
 	@mkdir -p $(LIBDIR)
 	@cp -r src/* $(LIBDIR)/
-	@echo '#!/bin/bash' > $(BINDIR)/gemini
-	@echo 'exec $(PYTHON) $(LIBDIR)/codeprint.py "$$@"' >> $(BINDIR)/gemini
-	@chmod +x $(BINDIR)/gemini
+	@echo '#!/bin/bash' > $(BINDIR)/codeprint
+	@echo 'exec $(PYTHON) $(LIBDIR)/codeprint.py "$$@"' >> $(BINDIR)/codeprint
+	@chmod +x $(BINDIR)/codeprint
 	@echo "✅ Installation complete! Run 'gemini --help' to get started."
 
 uninstall:
 	@echo "Uninstalling CodePrint..."
 	@rm -rf $(LIBDIR)
-	@rm -f $(BINDIR)/gemini
+	@rm -f $(BINDIR)/codeprint
 	@echo "✅ Uninstallation complete!"
 
 test:

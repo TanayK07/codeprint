@@ -1,4 +1,4 @@
-class CodePrint < Formula
+class Codeprintio < Formula
   desc "A powerful cross-platform tool for creating AI-ready project snapshots"
   homepage "https://github.com/Tanayk07/codeprint"
   url "https://github.com/Tanayk07/codeprint/archive/v2.0.0.tar.gz"
@@ -12,6 +12,6 @@ class CodePrint < Formula
   end
 
   test do
-    system "#{bin}/gemini", "--version"
+    system "#{bin}/codeprint", "--version"
   end
 end

@@ -1,9 +1,9 @@
 # 🚀 CodePrint
 
-[![PyPI version](https://badge.fury.io/py/codeprint.svg)](https://badge.fury.io/py/codeprint)
-[![npm version](https://badge.fury.io/js/codeprint.svg)](https://badge.fury.io/js/codeprint)
+[![PyPI version](https://badge.fury.io/py/codeprintio.svg)](https://badge.fury.io/py/codeprintio)
+[![npm version](https://badge.fury.io/js/codeprintio.svg)](https://badge.fury.io/js/codeprintio)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Platform](https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20linux-blue)](https://github.com/yourusername/codeprint)
+[![Platform](https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20linux-blue)](https://github.com/Tanayk07/codeprint)
 
 A blazing-fast, cross-platform CLI tool that creates comprehensive AI-ready snapshots of your codebase. Perfect for use with ChatGPT, Claude, Gemini, and other AI assistants.
 
@@ -30,52 +30,52 @@ A blazing-fast, cross-platform CLI tool that creates comprehensive AI-ready snap
 
 **Linux/macOS:**
 ```bash
-curl -sSL https://raw.githubusercontent.com/yourusername/codeprint/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/Tanayk07/codeprint/main/install.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```powershell
-iwr -useb https://raw.githubusercontent.com/yourusername/codeprint/main/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/Tanayk07/codeprint/main/install.ps1 | iex
 ```
 
 ### Package Managers
 
 #### pip (Python)
 ```bash
-pip install codeprint
+pip install codeprintio
 ```
 
 #### npm (Node.js)
 ```bash
-npm install -g codeprint
+npm install -g codeprintio
 ```
 
 #### Homebrew (macOS)
 ```bash
-brew tap yourusername/codeprint
-brew install codeprint
+brew tap Tanayk07/codeprint
+brew install codeprintio
 ```
 
 #### Chocolatey (Windows)
 ```powershell
-choco install codeprint
+choco install codeprintio
 ```
 
 #### WinGet (Windows)
 ```powershell
-winget install codeprint
+winget install codeprintio
 ```
 
 #### Snap (Linux)
 ```bash
-sudo snap install codeprint
+sudo sudo snap install codeprintio
 ```
 
 #### APT (Debian/Ubuntu)
 ```bash
-sudo add-apt-repository ppa:yourusername/codeprint
+sudo add-apt-repository ppa:Tanayk07/codeprint
 sudo apt update
-sudo apt install codeprint
+sudo sudo apt install codeprintio
 ```
 
 ## 🚀 Quick Start
@@ -183,7 +183,7 @@ export GEMINI_MAX_FILES=1000
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/codeprint.git
+git clone https://github.com/Tanayk07/codeprint.git
 cd codeprint
 
 # Install dependencies
@@ -258,12 +258,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: [@Tanayk07](https://github.com/Tanayk07)
+- Email: tkedia7@gmail.com
 
 ## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/codeprint&type=Date)](https://star-history.com/#yourusername/codeprint&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=Tanayk07/codeprint&type=Date)](https://star-history.com/#Tanayk07/codeprint&Date)
 
 ---
 

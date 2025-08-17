@@ -1,5 +1,5 @@
 {
-  "name": "codeprint",
+  "name": "codeprintio",
   "version": "2.0.0",
   "description": "AI-ready code snapshots for any project",
   "main": "index.js",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/codeprint.git"
+    "url": "git+https://github.com/Tanayk07/codeprint.git"
   },
   "keywords": [
     "project-scanner",
@@ -22,12 +22,12 @@
     "prompt-engineering",
     "cli-tool"
   ],
-  "author": "Your Name",
+  "author": "Tanay Kedia",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yourusername/codeprint/issues"
+    "url": "https://github.com/Tanayk07/codeprint/issues"
   },
-  "homepage": "https://github.com/yourusername/codeprint#readme",
+  "homepage": "https://github.com/Tanayk07/codeprint#readme",
   "dependencies": {
     "chalk": "^5.0.0",
     "commander": "^9.0.0",

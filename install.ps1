@@ -53,15 +53,15 @@ Write-Output ""
 switch ($InstallMethod) {
     "winget" {
         Write-ColorOutput Green "Installing via WinGet..."
-        winget install codeprint
+        winget install codeprintio
     }
     "chocolatey" {
         Write-ColorOutput Green "Installing via Chocolatey..."
-        choco install codeprint -y
+        choco install codeprintio -y
     }
     "pip" {
         Write-ColorOutput Green "Installing via pip..."
-        & $python.Path -m pip install codeprint
+        & $python.Path -m pip install codeprintio
     }
     default {
         Write-ColorOutput Red "Unknown installation method: $InstallMethod"
@@ -71,4 +71,4 @@ switch ($InstallMethod) {
 
 Write-Output ""
 Write-ColorOutput Green "✅ Installation complete!"
-Write-Output "Run 'gemini --help' to get started."
+Write-Output "Run 'codeprint --help' to get started."
