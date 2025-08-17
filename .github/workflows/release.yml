@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-python:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+    - name: Build package
+      run: python -m build
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+
+  build-npm:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        registry-url: 'https://registry.npmjs.org'
+    - run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build Windows installer
+      run: |
+        pip install pyinstaller
+        pyinstaller --onefile --console --name gemini src/gemini_scanner.py
+    - name: Upload Windows binary
+      uses: actions/upload-artifact@v3
+      with:
+        name: windows-binary
+        path: dist/gemini.exe
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build macOS binary
+      run: |
+        pip install pyinstaller
+        pyinstaller --onefile --console --name gemini src/gemini_scanner.py
+    - name: Upload macOS binary
+      uses: actions/upload-artifact@v3
+      with:
+        name: macos-binary
+        path: dist/gemini
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build Linux binary
+      run: |
+        pip install pyinstaller
+        pyinstaller --onefile --console --name gemini src/gemini_scanner.py
+    - name: Build Snap package
+      uses: snapcore/action-build@v1
+    - name: Upload Linux binary
+      uses: actions/upload-artifact@v3
+      with:
+        name: linux-binary
+        path: dist/gemini
