@@ -4,13 +4,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="codeprint",
+    name="codeprintio",
     version="2.0.0",
-    author="Your Name",
+    author="Tanayk07",
     description="AI-ready code snapshots for any project",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/codeprint",
+    url="https://github.com/Tanayk07/codeprint",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     classifiers=[
