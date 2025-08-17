@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="codeprintio",
-    version="2.0.0",
+    version="1.0.0",
     author="Tanayk07",
     description="AI-ready code snapshots for any project",
     long_description=long_description,

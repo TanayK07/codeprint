@@ -3,7 +3,7 @@
 set -e
 
 REPO="https://github.com/Tanayk07/codeprint"
-VERSION="2.0.0"
+VERSION="1.0.0"
 
 # Colors for output
 RED='\033[0;31m'
