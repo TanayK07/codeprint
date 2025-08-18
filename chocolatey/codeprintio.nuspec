@@ -9,7 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/Tanayk07/codeprint</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/yourusername/gemini-scanner/main/icon.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/Tanayk07/gemini-scanner/main/icon.png</iconUrl>
     <description>A powerful cross-platform tool for creating AI-ready project snapshots</description>
     <releaseNotes>https://github.com/Tanayk07/codeprint/releases</releaseNotes>
     <tags>cli development tools scanner</tags>
