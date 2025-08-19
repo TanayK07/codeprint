@@ -77,7 +77,7 @@ elif platform.system() == "Linux":
 
 setup(
     name="codeprint",
-    version="1.0.1",
+    version="1.0.2",
     author="Tanay Kedia",
     description="AI-ready code snapshots for any project with enhanced features",
     long_description=long_description,

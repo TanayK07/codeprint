@@ -1,5 +1,5 @@
 name: codeprintio
-version: '1.0.1'
+version: '1.0.2'
 summary: A powerful cross-platform tool for creating AI-ready project snapshots
 description: |
   CodePrint is a high-performance, cross-platform CLI tool that creates

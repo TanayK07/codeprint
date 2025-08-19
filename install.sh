@@ -3,7 +3,7 @@
 set -e
 
 REPO="https://github.com/Tanayk07/codeprint"
-VERSION="1.0.1"
+VERSION="1.0.2"
 
 # Colors for output
 RED='\033[0;31m'
@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 # ASCII Banner
 print_banner() {
     echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║               🚀 CODEPRINT INSTALLER v1.0.1                   ║${NC}"
+    echo -e "${BLUE}║               🚀 CODEPRINT INSTALLER v1.0.2                   ║${NC}"
     echo -e "${BLUE}║           AI-Ready Code Snapshots for Any Project             ║${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
