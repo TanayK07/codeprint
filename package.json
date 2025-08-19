@@ -4,8 +4,9 @@
   "description": "AI-ready code snapshots for any project",
   "main": "index.js",
   "bin": {
+    "codeprintio": "./bin/codeprint.js",
     "codeprint": "./bin/codeprint.js",
-    "cp": "./bin/codeprint.js"
+    "codep": "./bin/codeprint.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
