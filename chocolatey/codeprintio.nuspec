@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>codeprintio</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>CodePrint IO</title>
     <authors>Tanay Kedia</authors>
     <owners>Tanay Kedia</owners>
