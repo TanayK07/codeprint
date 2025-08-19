@@ -22,11 +22,30 @@ import shutil
 import time
 
 # For cross-platform clipboard support
+CLIPBOARD_AVAILABLE = False
 try:
-    import pyperclip
-    CLIPBOARD_AVAILABLE = True
-except ImportError:
-    CLIPBOARD_AVAILABLE = False
+    # Try platform-specific clipboard tools first
+    if platform.system() == "Linux":
+        # Check for xclip or xsel
+        if shutil.which("xclip") or shutil.which("xsel"):
+            CLIPBOARD_AVAILABLE = True
+        else:
+            try:
+                import pyperclip
+                CLIPBOARD_AVAILABLE = True
+            except ImportError:
+                pass
+    elif platform.system() == "Darwin":  # macOS
+        # macOS has pbcopy built-in
+        CLIPBOARD_AVAILABLE = True
+    elif platform.system() == "Windows":
+        try:
+            import pyperclip
+            CLIPBOARD_AVAILABLE = True
+        except ImportError:
+            pass
+except Exception:
+    pass
 
 # For colored output
 try:
@@ -60,24 +79,18 @@ except ImportError:
     READLINE_AVAILABLE = False
 
 # Version
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
-# ASCII Art Logo
+# Compact ASCII Art Logo
 ASCII_LOGO = """
-╔═══════════════════════════════════════════════════════════════╗
-║   ██████╗ ██████╗ ██████╗ ███████╗                          ║
-║  ██╔════╝██╔═══██╗██╔══██╗██╔════╝                          ║
-║  ██║     ██║   ██║██║  ██║█████╗                            ║
-║  ██║     ██║   ██║██║  ██║██╔══╝                            ║
-║  ╚██████╗╚██████╔╝██████╔╝███████╗                          ║
-║   ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝                          ║
-║  ██████╗ ██████╗ ██╗███╗   ██╗████████╗                     ║
-║  ██╔══██╗██╔══██╗██║████╗  ██║██║████╗  ██║   ██║           ║
-║  ██████╔╝██████╔╝██║██╔██╗ ██║   ██║                        ║
-║  ██╔═══╝ ██╔══██╗██║██║╚██╗██║   ██║                        ║
-║  ██║     ██║  ██║██║██║ ╚████║   ██║                        ║
-║  ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝                        ║
-╚═══════════════════════════════════════════════════════════════╝
+╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║  ██████╗ ██████╗ ██████╗ ███████╗    ██████╗ ██████╗ ██╗███╗   ██╗████████╗  │  AI-Ready Code Snapshots v1.0.1  │  📋 Transform → AI Ready  ║
+║ ██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝  │ Cross-platform project scanner     │  🚀 Fast & Smart Detection ║
+║ ██║     ██║   ██║██║  ██║█████╗      ██████╔╝██████╔╝██║██╔██╗ ██║   ██║     │ Perfect for ChatGPT, Claude & More │  ⚙️  Highly Configurable  ║
+║ ██║     ██║   ██║██║  ██║██╔══╝      ██╔═══╝ ██╔══██╗██║██║╚██╗██║   ██║     │────────────────────────────────────│──────────────────────────║
+║ ╚██████╗╚██████╔╝██████╔╝███████╗    ██║     ██║  ██║██║██║ ╚████║   ██║     │ Use: codeprint [options] [path]    │  Get started: --help      ║
+║  ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝    ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝     │════════════════════════════════════│══════════════════════════║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 """
 
 class OutputFormat(Enum):
@@ -121,6 +134,181 @@ class ScannerConfig:
     include_hidden: bool = False
     verbose: bool = False
     interactive_mode: bool = False
+    custom_ignore_dirs: Set[str] = field(default_factory=set)
+    custom_ignore_files: Set[str] = field(default_factory=set)
+    custom_ignore_extensions: Set[str] = field(default_factory=set)
+
+def copy_to_clipboard(text: str) -> bool:
+    """Cross-platform clipboard copy function"""
+    try:
+        system = platform.system()
+        
+        if system == "Linux":
+            # Try xclip first
+            if shutil.which("xclip"):
+                process = subprocess.Popen(['xclip', '-selection', 'clipboard'], 
+                                         stdin=subprocess.PIPE, text=True)
+                process.communicate(input=text)
+                return process.returncode == 0
+            # Try xsel
+            elif shutil.which("xsel"):
+                process = subprocess.Popen(['xsel', '--clipboard', '--input'], 
+                                         stdin=subprocess.PIPE, text=True)
+                process.communicate(input=text)
+                return process.returncode == 0
+            # Fallback to pyperclip
+            else:
+                import pyperclip
+                pyperclip.copy(text)
+                return True
+                
+        elif system == "Darwin":  # macOS
+            process = subprocess.Popen(['pbcopy'], stdin=subprocess.PIPE, text=True)
+            process.communicate(input=text)
+            return process.returncode == 0
+            
+        elif system == "Windows":
+            import pyperclip
+            pyperclip.copy(text)
+            return True
+            
+    except Exception:
+        return False
+    
+    return False
+
+def setup_config_interactive():
+    """Interactive setup for configuration"""
+    print(f"\n{Fore.CYAN}╔══════════════════════════════════════════╗{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}║           CODEPRINT SETUP               ║{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}╚══════════════════════════════════════════╝{Style.RESET_ALL}")
+    print(f"\n{Fore.YELLOW}Let's configure CodePrint for your needs!{Style.RESET_ALL}")
+    
+    # Ask if user wants to use defaults
+    use_defaults = input(f"\n{Fore.GREEN}Use all default settings? (Y/n): {Style.RESET_ALL}").strip().lower()
+    
+    if use_defaults in ['y', 'yes', '']:
+        print(f"{Fore.GREEN}✓ Using all default settings{Style.RESET_ALL}")
+        config = ScannerConfig()
+        save_user_config(config)
+        return config
+    
+    print(f"\n{Fore.CYAN}Walking through configuration options...{Style.RESET_ALL}")
+    config = ScannerConfig()
+    
+    # Output format
+    print(f"\n{Fore.YELLOW}1. Output Format{Style.RESET_ALL}")
+    print(f"   txt - Simple text format")
+    print(f"   mcp - Markdown Context Pack format (better for AI)")
+    format_choice = input(f"   Choose format (txt/mcp) [txt]: ").strip().lower()
+    if format_choice == 'mcp':
+        config.output_format = OutputFormat.MCP
+    
+    # Clipboard
+    print(f"\n{Fore.YELLOW}2. Clipboard{Style.RESET_ALL}")
+    clipboard_choice = input(f"   Copy output to clipboard automatically? (y/N): ").strip().lower()
+    if clipboard_choice in ['y', 'yes']:
+        config.copy_to_clipboard = True
+    
+    # Max files
+    print(f"\n{Fore.YELLOW}3. Maximum Files{Style.RESET_ALL}")
+    max_files_choice = input(f"   Maximum files to scan (500/unlimited): ").strip().lower()
+    if max_files_choice in ['unlimited', 'u', 'no limit']:
+        config.max_files = 999999
+    elif max_files_choice.isdigit():
+        config.max_files = int(max_files_choice)
+    
+    # Max file size
+    print(f"\n{Fore.YELLOW}4. Maximum File Size{Style.RESET_ALL}")
+    max_size_choice = input(f"   Maximum file size in KB (1024/unlimited): ").strip().lower()
+    if max_size_choice in ['unlimited', 'u', 'no limit']:
+        config.max_file_size = 999999 * 1024
+    elif max_size_choice.isdigit():
+        config.max_file_size = int(max_size_choice) * 1024
+    
+    # Max lines per file
+    print(f"\n{Fore.YELLOW}5. Maximum Lines Per File{Style.RESET_ALL}")
+    max_lines_choice = input(f"   Maximum lines per file (1000/unlimited): ").strip().lower()
+    if max_lines_choice in ['unlimited', 'u', 'no limit']:
+        config.max_lines_per_file = 999999
+    elif max_lines_choice.isdigit():
+        config.max_lines_per_file = int(max_lines_choice)
+    
+    # Use .gitignore
+    print(f"\n{Fore.YELLOW}6. Respect .gitignore{Style.RESET_ALL}")
+    gitignore_choice = input(f"   Respect .gitignore patterns? (Y/n): ").strip().lower()
+    if gitignore_choice in ['n', 'no']:
+        config.use_gitignore = False
+    
+    # Auto-detect project
+    print(f"\n{Fore.YELLOW}7. Auto-detect Project Type{Style.RESET_ALL}")
+    autodetect_choice = input(f"   Auto-detect project type? (Y/n): ").strip().lower()
+    if autodetect_choice in ['n', 'no']:
+        config.auto_detect_project = False
+    
+    # Include hidden files
+    print(f"\n{Fore.YELLOW}8. Hidden Files{Style.RESET_ALL}")
+    hidden_choice = input(f"   Include hidden files? (y/N): ").strip().lower()
+    if hidden_choice in ['y', 'yes']:
+        config.include_hidden = True
+    
+    print(f"\n{Fore.GREEN}✓ Configuration complete!{Style.RESET_ALL}")
+    save_user_config(config)
+    return config
+
+def get_config_file_path():
+    """Get the path to the configuration file"""
+    if platform.system() == "Windows":
+        config_dir = os.path.expanduser("~\\AppData\\Local\\CodePrint")
+    else:
+        config_dir = os.path.expanduser("~/.config/codeprint")
+    
+    os.makedirs(config_dir, exist_ok=True)
+    return os.path.join(config_dir, "config.json")
+
+def save_user_config(config: ScannerConfig):
+    """Save user configuration to file"""
+    config_data = {
+        "output_format": config.output_format.value,
+        "copy_to_clipboard": config.copy_to_clipboard,
+        "max_file_size": config.max_file_size,
+        "max_files": config.max_files,
+        "max_lines_per_file": config.max_lines_per_file,
+        "use_gitignore": config.use_gitignore,
+        "auto_detect_project": config.auto_detect_project,
+        "include_hidden": config.include_hidden,
+    }
+    
+    try:
+        config_path = get_config_file_path()
+        with open(config_path, 'w') as f:
+            json.dump(config_data, f, indent=2)
+        print(f"{Fore.GREEN}✓ Configuration saved to: {config_path}{Style.RESET_ALL}")
+    except Exception as e:
+        print(f"{Fore.YELLOW}⚠ Could not save configuration: {e}{Style.RESET_ALL}")
+
+def load_user_config() -> ScannerConfig:
+    """Load user configuration from file"""
+    config = ScannerConfig()
+    
+    try:
+        config_path = get_config_file_path()
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                config_data = json.load(f)
+            
+            config.output_format = OutputFormat(config_data.get("output_format", "txt"))
+            config.copy_to_clipboard = config_data.get("copy_to_clipboard", False)
+            config.max_file_size = config_data.get("max_file_size", 1024 * 1024)
+            config.max_files = config_data.get("max_files", 500)
+            config.max_lines_per_file = config_data.get("max_lines_per_file", 1000)
+            config.use_gitignore = config_data.get("use_gitignore", True)
+            config.auto_detect_project = config_data.get("auto_detect_project", True)
+            config.include_hidden = config_data.get("include_hidden", False)
+    except Exception:
+        pass
+    
+    return config
 
 class ProjectDetector:
     """Detects project type based on files present"""
@@ -178,6 +366,17 @@ class ProjectDetector:
         
         return ProjectType.UNKNOWN
 
+    @staticmethod
+    def should_ignore_xml(project_type: ProjectType) -> bool:
+        """Ask user if XML files should be ignored for certain project types"""
+        if project_type == ProjectType.ANDROID:
+            choice = input(f"\n{Fore.YELLOW}Android project detected. Ignore XML files? (Y/n): {Style.RESET_ALL}").strip().lower()
+            return choice not in ['n', 'no']
+        elif project_type in [ProjectType.JAVA, ProjectType.DOTNET]:
+            choice = input(f"\n{Fore.YELLOW}{project_type.value.title()} project detected. Ignore XML files? (y/N): {Style.RESET_ALL}").strip().lower()
+            return choice in ['y', 'yes']
+        return False
+
 class IgnorePatterns:
     """Manages ignore patterns for different project types"""
     
@@ -204,7 +403,7 @@ class IgnorePatterns:
         # Archives
         '*.zip', '*.tar', '*.gz', '*.bz2', '*.7z', '*.rar',
         # Media
-        '*.jpg', '*.jpeg', '*.png', '*.gif', '*.bmp', '*.ico', '*.svg',
+        '*.jpg', '*.jpeg', '*.png', '*.gif', '*.bmp', '*.ico', '*.svg', '*.webp',
         '*.mp3', '*.mp4', '*.avi', '*.mov', '*.wmv', '*.flv',
         '*.wav', '*.flac', '*.ogg',
         # Documents
@@ -218,6 +417,10 @@ class IgnorePatterns:
         '*.pem', '*.key', '*.crt', '*.cer', '*.p12', '*.pfx',
         # OS files
         '.DS_Store', 'Thumbs.db', 'desktop.ini', '*.lnk',
+        # Java/Android binaries
+        '*.jar', '*.class', '*.dex', '*.apk', '*.aab',
+        # Gradle files
+        '*.gradle.kts', 'gradlew', 'gradlew.bat', 'gradle-wrapper.jar',
     }
     
     # Project-specific ignore patterns
@@ -266,6 +469,8 @@ class IgnorePatterns:
             'files': {
                 '*.apk', '*.aab', '*.ap_', '*.dex', '*.so',
                 'local.properties', '*.keystore', '*.jks',
+                'gradlew', 'gradlew.bat', 'gradle-wrapper.jar',
+                'gradle-wrapper.properties',
             }
         },
         ProjectType.DOTNET: {
@@ -297,10 +502,14 @@ class IgnorePatterns:
     }
     
     @classmethod
-    def get_ignore_patterns(cls, project_type: ProjectType) -> Tuple[Set[str], Set[str]]:
+    def get_ignore_patterns(cls, project_type: ProjectType, ignore_xml: bool = False) -> Tuple[Set[str], Set[str]]:
         """Get ignore patterns for a specific project type"""
         dirs = cls.UNIVERSAL_IGNORE_DIRS.copy()
         files = cls.UNIVERSAL_IGNORE_FILES.copy()
+        
+        # Add XML ignore if requested
+        if ignore_xml:
+            files.add('*.xml')
         
         if project_type in cls.PROJECT_SPECIFIC:
             specific = cls.PROJECT_SPECIFIC[project_type]
@@ -349,6 +558,16 @@ class FastFileProcessor:
     def should_ignore(self, path: Path, is_dir: bool = False) -> bool:
         """Check if a path should be ignored"""
         name = path.name
+        
+        # Check custom ignore patterns first
+        if name in self.config.custom_ignore_dirs and is_dir:
+            return True
+        if name in self.config.custom_ignore_files and not is_dir:
+            return True
+        
+        # Check custom extensions
+        if not is_dir and path.suffix.lower() in self.config.custom_ignore_extensions:
+            return True
         
         # Check directory patterns
         if is_dir:
@@ -626,19 +845,10 @@ class InteractiveCLI:
     def print_banner(self):
         """Print the interactive mode banner"""
         if COLORS_AVAILABLE:
-            lines = ASCII_LOGO.split('\n')
-            colors = [Fore.BLUE, Fore.CYAN, Fore.GREEN, Fore.YELLOW, Fore.MAGENTA]
-            for i, line in enumerate(lines):
-                color = colors[i % len(colors)]
-                print(color + Style.BRIGHT + line)
-            
-            print(Fore.WHITE + Style.BRIGHT + f"  CodePrint v{__version__} - Interactive Mode")
-            print(Fore.CYAN + "  📋 Navigate and scan any project directory")
+            print(Fore.BLUE + Style.BRIGHT + ASCII_LOGO)
             print(Style.RESET_ALL)
         else:
             print(ASCII_LOGO)
-            print(f"  CodePrint v{__version__} - Interactive Mode")
-            print("  Navigate and scan any project directory")
         print()
     
     def print_help(self):
@@ -663,6 +873,7 @@ class InteractiveCLI:
   {Fore.YELLOW}scan -c{Style.RESET_ALL}         - Scan and copy to clipboard
   {Fore.YELLOW}scan -o file.txt{Style.RESET_ALL} - Scan to specific file
   {Fore.YELLOW}scan --no-gitignore{Style.RESET_ALL} - Ignore .gitignore patterns
+  {Fore.YELLOW}scan --ignore dir1,file.ext{Style.RESET_ALL} - Ignore custom patterns
 
 {Fore.CYAN}Configuration Keys:{Style.RESET_ALL}
   {Fore.YELLOW}format{Style.RESET_ALL}          - Output format (txt/mcp)
@@ -819,6 +1030,16 @@ class InteractiveCLI:
                     self.config.output_file = args[i + 1]
                 elif arg == '--no-gitignore':
                     self.config.use_gitignore = False
+                elif arg == '--ignore' and i + 1 < len(args):
+                    ignore_items = args[i + 1].split(',')
+                    for item in ignore_items:
+                        item = item.strip()
+                        if '.' in item and not item.startswith('.'):
+                            self.config.custom_ignore_extensions.add(item)
+                        elif item.endswith('/'):
+                            self.config.custom_ignore_dirs.add(item.rstrip('/'))
+                        else:
+                            self.config.custom_ignore_files.add(item)
         
         # Perform scan
         project_path = Path(self.current_dir)
@@ -900,27 +1121,21 @@ class ProjectScanner:
     def print_banner(self):
         """Print colorful ASCII banner"""
         if COLORS_AVAILABLE:
-            # Gradient effect for the banner
-            lines = ASCII_LOGO.split('\n')
-            colors = [Fore.BLUE, Fore.CYAN, Fore.GREEN, Fore.YELLOW, Fore.MAGENTA]
-            for i, line in enumerate(lines):
-                color = colors[i % len(colors)]
-                print(color + Style.BRIGHT + line)
-            
-            # Print info
-            print(Fore.WHITE + Style.BRIGHT + "  AI-Ready Code Snapshots v" + __version__)
-            print(Fore.CYAN + "  📋 Transform code into AI-ready snapshots")
+            print(Fore.BLUE + Style.BRIGHT + ASCII_LOGO)
             print(Style.RESET_ALL)
         else:
             print(ASCII_LOGO)
-            print(f"  Project Scanner v{__version__}")
-            print("  Transform code into AI-ready snapshots")
         print()
     
     def setup_ignore_patterns(self, project_path: Path, project_type: ProjectType):
         """Setup ignore patterns based on project type and gitignore"""
+        # Ask about XML files for certain project types
+        ignore_xml = False
+        if not self.config.interactive_mode:
+            ignore_xml = ProjectDetector.should_ignore_xml(project_type)
+        
         # Get project-specific patterns
-        dirs, files = IgnorePatterns.get_ignore_patterns(project_type)
+        dirs, files = IgnorePatterns.get_ignore_patterns(project_type, ignore_xml)
         self.config.ignore_dirs.update(dirs)
         self.config.ignore_patterns.update(files)
         
@@ -991,184 +1206,185 @@ class ProjectScanner:
         if self.config.copy_to_clipboard:
             if CLIPBOARD_AVAILABLE:
                 try:
-                    pyperclip.copy(output)
-                    print(f"{Fore.GREEN}✓ Output copied to clipboard{Style.RESET_ALL}")
+                    success = copy_to_clipboard(output)
+                    if success:
+                        print(f"{Fore.GREEN}✓ Output copied to clipboard{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.YELLOW}⚠ Could not copy to clipboard{Style.RESET_ALL}")
                 except Exception as e:
                     print(f"{Fore.YELLOW}⚠ Could not copy to clipboard: {e}{Style.RESET_ALL}")
             else:
-                print(f"{Fore.YELLOW}⚠ Clipboard functionality not available (install pyperclip){Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}⚠ Clipboard functionality not available{Style.RESET_ALL}")
+                system = platform.system()
+                if system == "Linux":
+                    print(f"{Fore.CYAN}Install clipboard support: sudo apt install xclip{Style.RESET_ALL}")
+                elif system == "Windows":
+                    print(f"{Fore.CYAN}Install clipboard support: pip install pyperclip{Style.RESET_ALL}")
+
+def parse_ignore_argument(ignore_arg: str, config: ScannerConfig):
+    """Parse the --ignore argument and update config"""
+    items = ignore_arg.split(',')
+    for item in items:
+        item = item.strip()
+        if item.startswith('.') and len(item) > 1:  # File extension
+            config.custom_ignore_extensions.add(item)
+        elif item.endswith('/'):  # Directory
+            config.custom_ignore_dirs.add(item.rstrip('/'))
+        elif '.' in item and not item.startswith('.'):  # File with extension
+            config.custom_ignore_extensions.add('.' + item.split('.')[-1])
+        else:  # File or directory name
+            config.custom_ignore_files.add(item)
+            config.custom_ignore_dirs.add(item)
+
+def install_clipboard_dependencies():
+    """Install clipboard dependencies based on OS"""
+    system = platform.system()
+    
+    if system == "Linux":
+        print(f"{Fore.YELLOW}Installing clipboard support for Linux...{Style.RESET_ALL}")
+        try:
+            # Try to install xclip
+            subprocess.run(['sudo', 'apt', 'update'], check=True, capture_output=True)
+            subprocess.run(['sudo', 'apt', 'install', '-y', 'xclip'], check=True, capture_output=True)
+            print(f"{Fore.GREEN}✓ xclip installed successfully{Style.RESET_ALL}")
+            return True
+        except:
+            try:
+                # Fallback to pip
+                subprocess.run([sys.executable, '-m', 'pip', 'install', 'pyperclip'], check=True)
+                print(f"{Fore.GREEN}✓ pyperclip installed successfully{Style.RESET_ALL}")
+                return True
+            except:
+                print(f"{Fore.RED}✗ Could not install clipboard support{Style.RESET_ALL}")
+                return False
+    
+    elif system == "Windows":
+        try:
+            subprocess.run([sys.executable, '-m', 'pip', 'install', 'pyperclip'], check=True)
+            print(f"{Fore.GREEN}✓ pyperclip installed successfully{Style.RESET_ALL}")
+            return True
+        except:
+            print(f"{Fore.RED}✗ Could not install clipboard support{Style.RESET_ALL}")
+            return False
+    
+    else:  # macOS
+        print(f"{Fore.GREEN}✓ Clipboard support is built-in on macOS{Style.RESET_ALL}")
+        return True
 
 def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(
-        description="CodePrint - Create AI-ready project snapshots",
+        description='CodePrint - AI-ready project snapshots',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  codeprint                    # Start interactive mode
-  codeprint -i                 # Explicitly start interactive mode
-  codeprint .                  # Scan current directory
-  codeprint /path/to/project   # Scan specific directory
-  codeprint -f mcp -c          # Scan with MCP format and copy to clipboard
-  codeprint --help             # Show all options
+  codeprint                          # Scan current directory
+  codeprint /path/to/project         # Scan specific directory
+  codeprint -f mcp -c                # MCP format + clipboard
+  codeprint --ignore "*.log,temp/"   # Ignore logs and temp directory
+  codeprint --setup                  # Run setup configuration
+  codeprint -i                       # Interactive mode
         """
     )
     
-    # Add interactive mode flag
-    parser.add_argument(
-        '-i', '--interactive',
-        action='store_true',
-        help='Start in interactive mode with directory navigation'
-    )
-    
-    # Path argument (optional)
-    parser.add_argument(
-        'path',
-        nargs='?',
-        default=None,
-        help='Path to scan (if not provided, starts interactive mode)'
-    )
-    
-    # Output format options
-    parser.add_argument(
-        '-f', '--format',
-        choices=['txt', 'mcp'],
-        default='txt',
-        help='Output format (default: txt)'
-    )
-    
-    parser.add_argument(
-        '-o', '--output',
-        help='Output file name'
-    )
-    
-    parser.add_argument(
-        '-c', '--clipboard',
-        action='store_true',
-        help='Copy output to clipboard'
-    )
-    
-    # Scan options
-    parser.add_argument(
-        '--no-gitignore',
-        action='store_true',
-        help='Do not use .gitignore patterns'
-    )
-    
-    parser.add_argument(
-        '--no-auto-detect',
-        action='store_true',
-        help='Do not auto-detect project type'
-    )
-    
-    parser.add_argument(
-        '--include-hidden',
-        action='store_true',
-        help='Include hidden files'
-    )
-    
-    # Limits
-    parser.add_argument(
-        '--max-file-size',
-        type=int,
-        default=1024,
-        help='Maximum file size in KB (default: 1024)'
-    )
-    
-    parser.add_argument(
-        '--max-files',
-        type=int,
-        default=500,
-        help='Maximum number of files (default: 500)'
-    )
-    
-    parser.add_argument(
-        '--max-lines',
-        type=int,
-        default=1000,
-        help='Maximum lines per file (default: 1000)'
-    )
-    
-    # Other options
-    parser.add_argument(
-        '--no-progress',
-        action='store_true',
-        help='Disable progress output'
-    )
-    
-    parser.add_argument(
-        '--no-parallel',
-        action='store_true',
-        help='Disable parallel processing'
-    )
-    
-    parser.add_argument(
-        '-v', '--verbose',
-        action='store_true',
-        help='Verbose output'
-    )
-    
-    parser.add_argument(
-        '--version',
-        action='version',
-        version=f'%(prog)s {__version__}'
-    )
+    parser.add_argument('path', nargs='?', default='.', help='Path to scan (default: current directory)')
+    parser.add_argument('-f', '--format', choices=['txt', 'mcp'], help='Output format')
+    parser.add_argument('-o', '--output', help='Output file name')
+    parser.add_argument('-c', '--clipboard', action='store_true', help='Copy to clipboard')
+    parser.add_argument('--max-file-size', type=int, help='Maximum file size in KB')
+    parser.add_argument('--max-files', type=int, help='Maximum number of files')
+    parser.add_argument('--max-lines', type=int, help='Maximum lines per file')
+    parser.add_argument('--include-hidden', action='store_true', help='Include hidden files')
+    parser.add_argument('--no-gitignore', action='store_true', help='Ignore .gitignore patterns')
+    parser.add_argument('--no-auto-detect', action='store_true', help='Disable project type detection')
+    parser.add_argument('--no-progress', action='store_true', help='Disable progress output')
+    parser.add_argument('--no-parallel', action='store_true', help='Disable parallel processing')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')
+    parser.add_argument('-i', '--interactive', action='store_true', help='Interactive mode')
+    parser.add_argument('--setup', action='store_true', help='Run setup configuration')
+    parser.add_argument('--ignore', help='Comma-separated list of files/dirs/extensions to ignore')
+    parser.add_argument('--install-clipboard', action='store_true', help='Install clipboard dependencies')
     
     args = parser.parse_args()
     
-    # Create configuration
-    config = ScannerConfig(
-        output_format=OutputFormat(args.format),
-        copy_to_clipboard=args.clipboard,
-        output_file=args.output,
-        max_file_size=args.max_file_size * 1024,
-        max_files=args.max_files,
-        max_lines_per_file=args.max_lines,
-        use_gitignore=not args.no_gitignore,
-        auto_detect_project=not args.no_auto_detect,
-        show_progress=not args.no_progress,
-        parallel_processing=not args.no_parallel,
-        include_hidden=args.include_hidden,
-        verbose=args.verbose,
-        interactive_mode=args.interactive or (args.path is None)
-    )
+    # Handle special commands
+    if args.install_clipboard:
+        install_clipboard_dependencies()
+        return
     
-    # Check if we should start interactive mode
-    if config.interactive_mode:
-        # Start interactive CLI
-        interactive_cli = InteractiveCLI(config)
-        interactive_cli.run()
-    else:
-        # Direct scan mode
-        scanner = ProjectScanner(config)
+    if args.setup:
+        setup_config_interactive()
+        return
+    
+    # Load configuration
+    config = load_user_config()
+    
+    # Override with command line arguments
+    if args.format:
+        config.output_format = OutputFormat(args.format)
+    if args.clipboard:
+        config.copy_to_clipboard = True
+    if args.output:
+        config.output_file = args.output
+    if args.max_file_size:
+        config.max_file_size = args.max_file_size * 1024
+    if args.max_files:
+        config.max_files = args.max_files
+    if args.max_lines:
+        config.max_lines_per_file = args.max_lines
+    if args.include_hidden:
+        config.include_hidden = True
+    if args.no_gitignore:
+        config.use_gitignore = False
+    if args.no_auto_detect:
+        config.auto_detect_project = False
+    if args.no_progress:
+        config.show_progress = False
+    if args.no_parallel:
+        config.parallel_processing = False
+    if args.verbose:
+        config.verbose = True
+    if args.interactive:
+        config.interactive_mode = True
+    if args.ignore:
+        parse_ignore_argument(args.ignore, config)
+    
+    # Interactive mode
+    if args.interactive:
+        cli = InteractiveCLI(config)
+        cli.run()
+        return
+    
+    # Create scanner
+    scanner = ProjectScanner(config)
+    
+    # Show banner if not in quiet mode
+    if config.show_progress and not args.no_progress:
         scanner.print_banner()
-        
-        # Determine path to scan
-        if args.path:
-            if args.path == '.':
-                project_path = Path.cwd()
-            else:
-                project_path = Path(args.path).resolve()
-        else:
-            project_path = Path.cwd()
-        
+    
+    # Scan project
+    try:
+        project_path = Path(args.path).resolve()
         if not project_path.exists():
-            print(f"{Fore.RED}✗ Path does not exist: {project_path}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Error: Path does not exist: {args.path}{Style.RESET_ALL}")
             sys.exit(1)
         
-        try:
-            output, stats = scanner.scan(project_path)
-            scanner.save_output(output, config.output_file)
-        except KeyboardInterrupt:
-            print(f"\n{Fore.YELLOW}⚠ Scan interrupted by user{Style.RESET_ALL}")
+        if not project_path.is_dir():
+            print(f"{Fore.RED}Error: Path is not a directory: {args.path}{Style.RESET_ALL}")
             sys.exit(1)
-        except Exception as e:
-            print(f"{Fore.RED}✗ Error: {e}{Style.RESET_ALL}")
-            if config.verbose:
-                import traceback
-                traceback.print_exc()
-            sys.exit(1)
+        
+        output, stats = scanner.scan(project_path)
+        scanner.save_output(output, config.output_file)
+        
+    except KeyboardInterrupt:
+        print(f"\n{Fore.YELLOW}Scan interrupted{Style.RESET_ALL}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"{Fore.RED}Error: {e}{Style.RESET_ALL}")
+        if config.verbose:
+            import traceback
+            traceback.print_exc()
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
-    
