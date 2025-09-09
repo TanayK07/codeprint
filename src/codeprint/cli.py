@@ -79,12 +79,12 @@ except ImportError:
     READLINE_AVAILABLE = False
 
 # Version
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 
 # Compact ASCII Art Logo
 ASCII_LOGO = """
 ╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
-║  ██████╗ ██████╗ ██████╗ ███████╗    ██████╗ ██████╗ ██╗███╗   ██╗████████╗  │  AI-Ready Code Snapshots v1.0.4  │  📋 Transform → AI Ready  ║
+║  ██████╗ ██████╗ ██████╗ ███████╗    ██████╗ ██████╗ ██╗███╗   ██╗████████╗  │  AI-Ready Code Snapshots v1.0.5  │  📋 Transform → AI Ready  ║
 ║ ██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝  │ Cross-platform project scanner     │  🚀 Fast & Smart Detection ║
 ║ ██║     ██║   ██║██║  ██║█████╗      ██████╔╝██████╔╝██║██╔██╗ ██║   ██║     │ Perfect for ChatGPT, Claude & More │  ⚙️  Highly Configurable  ║
 ║ ██║     ██║   ██║██║  ██║██╔══╝      ██╔═══╝ ██╔══██╗██║██║╚██╗██║   ██║     │────────────────────────────────────│──────────────────────────║
@@ -317,42 +317,58 @@ class ProjectDetector:
     def detect_project_type(path: Path) -> ProjectType:
         """Detect the project type based on characteristic files"""
         
-        # Check for specific project files
+        # Check for specific project files - order matters!
         checks = [
-             # Java BEFORE Android (so build.gradle is detected as Java first)
-            (['pom.xml', 'build.gradle'], ProjectType.JAVA),
-            # Android
-            (['build.gradle', 'AndroidManifest.xml', 'gradle.properties'], ProjectType.ANDROID),
+            # Flutter (check before Dart/Android)
+            (['pubspec.yaml', 'lib/main.dart'], ProjectType.FLUTTER),
+            # Android (check before general Java)
+            (['build.gradle', 'AndroidManifest.xml'], ProjectType.ANDROID),
+            (['gradle.properties', 'AndroidManifest.xml'], ProjectType.ANDROID),
             # iOS
             (['Podfile', '*.xcodeproj', '*.xcworkspace'], ProjectType.IOS),
-            # Flutter
-            (['pubspec.yaml', 'lib/main.dart'], ProjectType.FLUTTER),
-            # Python
-            (['requirements.txt', 'setup.py', 'pyproject.toml', 'Pipfile'], ProjectType.PYTHON),
-            # Node.js/JavaScript
-            (['package.json'], ProjectType.JAVASCRIPT),
-            # TypeScript
-            (['tsconfig.json'], ProjectType.TYPESCRIPT),
-            # React
-            (['package.json', 'src/App.js', 'src/App.jsx', 'src/App.tsx'], ProjectType.REACT),
+            # React (check before general JavaScript)
+            (['package.json', 'src/App.js'], ProjectType.REACT),
+            (['package.json', 'src/App.jsx'], ProjectType.REACT),
+            (['package.json', 'src/App.tsx'], ProjectType.REACT),
             # Vue
-            (['vue.config.js', 'nuxt.config.js'], ProjectType.VUE),
+            (['vue.config.js'], ProjectType.VUE),
+            (['nuxt.config.js'], ProjectType.VUE),
             # Angular
-            (['angular.json', '.angular-cli.json'], ProjectType.ANGULAR),
+            (['angular.json'], ProjectType.ANGULAR),
+            (['.angular-cli.json'], ProjectType.ANGULAR),
+            # TypeScript (check before JavaScript)
+            (['tsconfig.json'], ProjectType.TYPESCRIPT),
+            # JavaScript/Node.js
+            (['package.json'], ProjectType.JAVASCRIPT),
+            # Python
+            (['requirements.txt'], ProjectType.PYTHON),
+            (['setup.py'], ProjectType.PYTHON),
+            (['pyproject.toml'], ProjectType.PYTHON),
+            (['Pipfile'], ProjectType.PYTHON),
             # Java
-            (['pom.xml', 'build.gradle'], ProjectType.JAVA),
+            (['pom.xml'], ProjectType.JAVA),
+            (['build.gradle'], ProjectType.JAVA),
             # .NET
-            (['*.csproj', '*.sln', '*.vbproj', '*.fsproj'], ProjectType.DOTNET),
+            (['*.csproj'], ProjectType.DOTNET),
+            (['*.sln'], ProjectType.DOTNET),
+            (['*.vbproj'], ProjectType.DOTNET),
+            (['*.fsproj'], ProjectType.DOTNET),
             # Go
-            (['go.mod', 'go.sum'], ProjectType.GO),
+            (['go.mod'], ProjectType.GO),
+            (['go.sum'], ProjectType.GO),
             # Rust
-            (['Cargo.toml', 'Cargo.lock'], ProjectType.RUST),
+            (['Cargo.toml'], ProjectType.RUST),
+            (['Cargo.lock'], ProjectType.RUST),
             # C++
-            (['CMakeLists.txt', 'Makefile', '*.cpp'], ProjectType.CPP),
+            (['CMakeLists.txt'], ProjectType.CPP),
+            (['Makefile'], ProjectType.CPP),
+            (['*.cpp'], ProjectType.CPP),
             # Ruby
-            (['Gemfile', 'Rakefile'], ProjectType.RUBY),
+            (['Gemfile'], ProjectType.RUBY),
+            (['Rakefile'], ProjectType.RUBY),
             # PHP
-            (['composer.json', 'composer.lock'], ProjectType.PHP),
+            (['composer.json'], ProjectType.PHP),
+            (['composer.lock'], ProjectType.PHP),
         ]
         
         for patterns, project_type in checks:
@@ -367,20 +383,61 @@ class ProjectDetector:
         return ProjectType.UNKNOWN
 
     @staticmethod
-    def should_ignore_xml(project_type: ProjectType) -> bool:
-        """Ask user if XML files should be ignored for certain project types"""
-        if project_type == ProjectType.ANDROID:
-            choice = input(f"\n{Fore.YELLOW}Android project detected. Ignore XML files? (Y/n): {Style.RESET_ALL}").strip().lower()
+    def should_ignore_xml(project_type: ProjectType, interactive: bool = True) -> bool:
+        """Determine if XML files should be ignored for certain project types"""
+        # Auto-ignore XML for certain project types
+        auto_ignore_xml_projects = {
+            ProjectType.ANDROID,  # Android XML files are often layout/config
+        }
+        
+        if project_type in auto_ignore_xml_projects:
+            if not interactive:
+                return True
+            # For Android, default to yes but allow override
+            choice = input(f"\n{Fore.YELLOW}Android project detected. Skip XML files? (Y/n): {Style.RESET_ALL}").strip().lower()
             return choice not in ['n', 'no']
-        elif project_type in [ProjectType.JAVA, ProjectType.DOTNET]:
-            choice = input(f"\n{Fore.YELLOW}{project_type.value.title()} project detected. Ignore XML files? (y/N): {Style.RESET_ALL}").strip().lower()
+        
+        # Ask for other project types that commonly have XML
+        xml_common_projects = {
+            ProjectType.JAVA,
+            ProjectType.DOTNET,
+        }
+        
+        if project_type in xml_common_projects and interactive:
+            choice = input(f"\n{Fore.YELLOW}{project_type.value.title()} project detected. Skip XML files? (y/N): {Style.RESET_ALL}").strip().lower()
             return choice in ['y', 'yes']
+        
         return False
+
+    @staticmethod
+    def get_recommended_ignore_patterns(project_type: ProjectType, interactive: bool = True) -> Tuple[Set[str], Set[str]]:
+        """Get recommended ignore patterns with automatic XML handling"""
+        # Get base patterns
+        ignore_xml = ProjectDetector.should_ignore_xml(project_type, interactive)
+        dirs, files = IgnorePatterns.get_ignore_patterns(project_type, ignore_xml)
+        
+        # Add any additional project-specific recommendations
+        if project_type == ProjectType.ANDROID:
+            # Additional Android-specific ignores
+            files.update({
+                'proguard-rules.pro',  # Obfuscation rules - often not needed for AI
+                '*.jks', '*.keystore',  # Security files
+            })
+        elif project_type == ProjectType.PYTHON:
+            # Additional Python-specific ignores
+            dirs.update({
+                '.pytest_cache',
+                '.mypy_cache',
+                '__pycache__',
+            })
+        
+        return dirs, files
+    
 
 class IgnorePatterns:
     """Manages ignore patterns for different project types"""
     
-    # Universal ignore patterns
+    # Universal ignore patterns - Enhanced with more binary file types
     UNIVERSAL_IGNORE_DIRS = {
         # Version control
         '.git', '.svn', '.hg', '.bzr',
@@ -397,30 +454,74 @@ class IgnorePatterns:
     }
     
     UNIVERSAL_IGNORE_FILES = {
-        # Binary files
+        # Binary executables
         '*.exe', '*.dll', '*.so', '*.dylib', '*.a', '*.lib',
         '*.o', '*.obj', '*.pdb', '*.idb',
-        # Archives
+        
+        # Archives and compressed files
         '*.zip', '*.tar', '*.gz', '*.bz2', '*.7z', '*.rar',
-        # Media
+        '*.xz', '*.lz', '*.lzma', '*.cab', '*.msi', '*.pkg',
+        
+        # Images and graphics
         '*.jpg', '*.jpeg', '*.png', '*.gif', '*.bmp', '*.ico', '*.svg', '*.webp',
-        '*.mp3', '*.mp4', '*.avi', '*.mov', '*.wmv', '*.flv',
-        '*.wav', '*.flac', '*.ogg',
-        # Documents
-        '*.pdf', '*.doc', '*.docx', '*.xls', '*.xlsx', '*.ppt', '*.pptx',
+        '*.tiff', '*.tif', '*.raw', '*.cr2', '*.nef', '*.arw', '*.dng',
+        '*.psd', '*.ai', '*.eps', '*.pdf',
+        
+        # Audio files
+        '*.mp3', '*.wav', '*.flac', '*.ogg', '*.aac', '*.m4a', '*.wma',
+        '*.opus', '*.ape', '*.ac3', '*.dts',
+        
+        # Video files
+        '*.mp4', '*.avi', '*.mov', '*.wmv', '*.flv', '*.mkv', '*.webm',
+        '*.m4v', '*.3gp', '*.mpg', '*.mpeg', '*.ts', '*.vob',
+        
+        # Documents (binary formats)
+        '*.doc', '*.docx', '*.xls', '*.xlsx', '*.ppt', '*.pptx',
+        '*.odt', '*.ods', '*.odp', '*.rtf',
+        
+        # Fonts
+        '*.ttf', '*.otf', '*.woff', '*.woff2', '*.eot',
+        
         # Databases
         '*.db', '*.sqlite', '*.sqlite3', '*.mdb', '*.accdb',
-        # Data files
+        
+        # Data files (binary)
         '*.pkl', '*.pickle', '*.npy', '*.npz', '*.h5', '*.hdf5',
-        '*.parquet', '*.feather', '*.arrow',
+        '*.parquet', '*.feather', '*.arrow', '*.mat',
+        
         # Certificates and keys
         '*.pem', '*.key', '*.crt', '*.cer', '*.p12', '*.pfx',
+        '*.jks', '*.keystore',
+        
         # OS files
         '.DS_Store', 'Thumbs.db', 'desktop.ini', '*.lnk',
+        
         # Java/Android binaries
-        '*.jar', '*.class', '*.dex', '*.apk', '*.aab',
+        '*.jar', '*.class', '*.dex', '*.apk', '*.aab', '*.aar',
+        
         # Gradle files
-        '*.gradle.kts', 'gradlew', 'gradlew.bat', 'gradle-wrapper.jar',
+        'gradlew', 'gradlew.bat', 'gradle-wrapper.jar',
+        
+        # iOS/macOS binaries
+        '*.ipa', '*.app', '*.dmg',
+        
+        # .NET binaries
+        '*.nupkg', '*.vsix',
+        
+        # Node.js
+        '*.node',
+        
+        # Python binaries
+        '*.pyd', '*.wheel',
+        
+        # Rust binaries
+        '*.rlib',
+        
+        # Go binaries
+        '*.test',
+        
+        # Other binary formats
+        '*.bin', '*.dat', '*.dump', '*.img', '*.iso',
     }
     
     # Project-specific ignore patterns
@@ -458,6 +559,7 @@ class IgnorePatterns:
             'files': {
                 '*.class', '*.jar', '*.war', '*.ear',
                 '.classpath', '.project', '.factorypath',
+                # XML files are often config files in Java - make optional
             }
         },
         ProjectType.ANDROID: {
@@ -471,6 +573,8 @@ class IgnorePatterns:
                 'local.properties', '*.keystore', '*.jks',
                 'gradlew', 'gradlew.bat', 'gradle-wrapper.jar',
                 'gradle-wrapper.properties',
+                # XML files should be excluded by default for Android
+                '*.xml',  # Added here for Android projects
             }
         },
         ProjectType.DOTNET: {
@@ -524,6 +628,18 @@ class IgnorePatterns:
         
         return dirs, files
 
+    @classmethod
+    def is_likely_binary(cls, file_path: Path) -> bool:
+        """Check if a file is likely binary based on extension"""
+        suffix = file_path.suffix.lower()
+        binary_extensions = {
+            # Extract just the extensions from UNIVERSAL_IGNORE_FILES
+            ext for pattern in cls.UNIVERSAL_IGNORE_FILES 
+            if pattern.startswith('*.')
+            for ext in [pattern[1:]]  # Remove the '*'
+        }
+        return suffix in binary_extensions
+
 class GitignoreParser:
     """Parse and apply .gitignore rules"""
     
@@ -548,12 +664,50 @@ class GitignoreParser:
         return patterns
 
 class FastFileProcessor:
-    """Fast parallel file processing"""
+    """Fast parallel file processing with improved binary detection"""
     
     def __init__(self, config: ScannerConfig):
         self.config = config
         self.processed_files = 0
         self.total_size = 0
+        
+    def is_binary_file(self, file_path: Path) -> bool:
+        """Check if a file is binary using multiple methods"""
+        
+        # Method 1: Check by extension first (fastest)
+        if IgnorePatterns.is_likely_binary(file_path):
+            return True
+        
+        # Method 2: Check file size - very large files are likely binary
+        try:
+            size = file_path.stat().st_size
+            if size > 10 * 1024 * 1024:  # 10MB
+                return True
+        except:
+            return True
+            
+        # Method 3: Sample-based binary detection (for small files)
+        try:
+            with open(file_path, 'rb') as f:
+                # Read first 8192 bytes
+                chunk = f.read(8192)
+                if not chunk:
+                    return False
+                    
+                # Check for null bytes (common in binary files)
+                if b'\x00' in chunk:
+                    return True
+                    
+                # Check for high percentage of non-printable characters
+                printable_chars = sum(1 for byte in chunk if 32 <= byte <= 126 or byte in [9, 10, 13])
+                if len(chunk) > 0 and (printable_chars / len(chunk)) < 0.75:
+                    return True
+                    
+        except Exception:
+            # If we can't read it, assume it's binary
+            return True
+            
+        return False
         
     def should_ignore(self, path: Path, is_dir: bool = False) -> bool:
         """Check if a path should be ignored"""
@@ -567,6 +721,10 @@ class FastFileProcessor:
         
         # Check custom extensions
         if not is_dir and path.suffix.lower() in self.config.custom_ignore_extensions:
+            return True
+        
+        # Check if it's a binary file (not for directories)
+        if not is_dir and self.is_binary_file(path):
             return True
         
         # Check directory patterns
@@ -587,17 +745,32 @@ class FastFileProcessor:
         return False
     
     def process_file(self, file_path: Path) -> Optional[Dict]:
-        """Process a single file"""
+        """Process a single file with better error handling"""
         try:
-            # Check file size
+            # Check file size first
             size = file_path.stat().st_size
             if size > self.config.max_file_size:
+                if self.config.verbose:
+                    print(f"Skipping {file_path}: too large ({size/1024:.1f} KB)")
+                return None
+            
+            # Check if binary
+            if self.is_binary_file(file_path):
+                if self.config.verbose:
+                    print(f"Skipping {file_path}: binary file detected")
                 return None
             
             # Try to read file
             try:
                 with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                     content = f.read()
+                    
+                    # Additional check for binary content after reading
+                    if '\x00' in content:
+                        if self.config.verbose:
+                            print(f"Skipping {file_path}: null bytes detected")
+                        return None
+                    
                     lines = content.splitlines()
                     
                     # Truncate if needed
@@ -611,31 +784,46 @@ class FastFileProcessor:
                         'size': size,
                         'lines': len(lines)
                     }
-            except Exception:
+            except UnicodeDecodeError:
+                if self.config.verbose:
+                    print(f"Skipping {file_path}: encoding error")
+                return None
+            except Exception as e:
+                if self.config.verbose:
+                    print(f"Skipping {file_path}: read error - {e}")
                 return None
                 
-        except Exception:
+        except Exception as e:
+            if self.config.verbose:
+                print(f"Error processing {file_path}: {e}")
             return None
     
     def scan_directory(self, root_path: Path) -> List[Dict]:
-        """Scan directory for files"""
+        """Scan directory for files with improved filtering"""
         files_to_process = []
         
         # Collect files
-        for item in root_path.rglob('*'):
-            if self.processed_files >= self.config.max_files:
-                break
-                
-            if item.is_file():
-                # Check if should ignore
-                should_ignore = False
-                for parent in item.parents:
-                    if self.should_ignore(parent, is_dir=True):
-                        should_ignore = True
-                        break
-                
-                if not should_ignore and not self.should_ignore(item):
-                    files_to_process.append(item)
+        try:
+            for item in root_path.rglob('*'):
+                if self.processed_files >= self.config.max_files:
+                    break
+                    
+                if item.is_file():
+                    # Check if should ignore
+                    should_ignore = False
+                    
+                    # Check parent directories for ignore patterns
+                    for parent in item.parents:
+                        if self.should_ignore(parent, is_dir=True):
+                            should_ignore = True
+                            break
+                    
+                    if not should_ignore and not self.should_ignore(item):
+                        files_to_process.append(item)
+        except Exception as e:
+            if self.config.verbose:
+                print(f"Error scanning directory: {e}")
+            return []
         
         # Process files in parallel if enabled
         results = []
@@ -643,18 +831,26 @@ class FastFileProcessor:
             with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
                 futures = [executor.submit(self.process_file, f) for f in files_to_process]
                 for future in concurrent.futures.as_completed(futures):
-                    result = future.result()
+                    try:
+                        result = future.result()
+                        if result:
+                            results.append(result)
+                            self.processed_files += 1
+                            self.total_size += result['size']
+                    except Exception as e:
+                        if self.config.verbose:
+                            print(f"Error in parallel processing: {e}")
+        else:
+            for file_path in files_to_process:
+                try:
+                    result = self.process_file(file_path)
                     if result:
                         results.append(result)
                         self.processed_files += 1
                         self.total_size += result['size']
-        else:
-            for file_path in files_to_process:
-                result = self.process_file(file_path)
-                if result:
-                    results.append(result)
-                    self.processed_files += 1
-                    self.total_size += result['size']
+                except Exception as e:
+                    if self.config.verbose:
+                        print(f"Error processing {file_path}: {e}")
         
         return results
 

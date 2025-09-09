@@ -1,6 +1,6 @@
 {
   "name": "codeprintio",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "AI-ready code snapshots for any project",
   "main": "index.js",
   "bin": {

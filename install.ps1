@@ -15,7 +15,7 @@ function Write-ColorOutput($ForegroundColor) {
 
 function Print-Banner {
     Write-ColorOutput Blue "╔════════════════════════════════════════════════════════════════╗"
-    Write-ColorOutput Blue "║               🚀 CODEPRINT INSTALLER v1.0.4                   ║"
+    Write-ColorOutput Blue "║               🚀 CODEPRINT INSTALLER v1.0.5                   ║"
     Write-ColorOutput Blue "║           AI-Ready Code Snapshots for Any Project             ║"
     Write-ColorOutput Blue "╚════════════════════════════════════════════════════════════════╝"
     Write-Output ""

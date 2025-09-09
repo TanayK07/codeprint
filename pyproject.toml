@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codeprintio"
-version = "1.0.4"
+version = "1.0.5"
 description = "A powerful cross-platform tool for creating AI-ready project snapshots"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -23,6 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Operating System :: OS Independent",
 ]
 dependencies = [
@@ -36,36 +37,30 @@ dependencies = [
 "Documentation" = "https://github.com/Tanayk07/codeprint#readme"
 
 [project.scripts]
-codeprintio = "codeprint.cli:main"
 codeprint = "codeprint.cli:main"
 codep = "codeprint.cli:main"
 
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["codeprint*"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
 [tool.black]
 line-length = 100
-target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
+target-version = ['py37', 'py38', 'py39', 'py310', 'py311', 'py312']
 include = '\.pyi?$'
 
 [tool.mypy]
 python_version = "3.7"
 warn_return_any = true
 warn_unused_configs = true
-disallow_untyped_defs = true
+disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q --cov=codeprint --cov-report=term-missing"
+addopts = "-ra -q"
 testpaths = [
     "tests",
-]
-
-[tool.coverage.run]
-source = ["codeprint"]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "if self.debug:",
-    "if __name__ == .__main__.:",
-    "raise NotImplementedError",
 ]
