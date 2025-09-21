@@ -8,7 +8,7 @@ version = "1.0.5"
 description = "A powerful cross-platform tool for creating AI-ready project snapshots"
 readme = "README.md"
 requires-python = ">=3.7"
-license = "MIT"
+license = {text = "MIT"}
 authors = [
     {name = "Tanay Kedia", email = "tkedia7@gmail.com"}
 ]
@@ -18,7 +18,7 @@ classifiers = [
     "Topic :: Software Development :: Documentation",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.8", 
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -37,9 +37,6 @@ dev = [
     "black>=22.0.0",
     "flake8>=4.0.0",
     "mypy>=0.950",
-]
-all = [
-    "pyperclip>=1.8.2",
 ]
 
 [project.urls]

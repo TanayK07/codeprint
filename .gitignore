@@ -152,3 +152,7 @@ desktop.ini
 project_snapshot*.txt
 project_snapshot*.md
 *.mcp
+
+
+#Node Modules 
+/node_modules
