@@ -2,7 +2,7 @@ class Codeprintio < Formula
   desc "AI-ready code snapshots for any project"
   homepage "https://github.com/Tanayk07/codeprint"
   url "https://github.com/Tanayk07/codeprint/archive/v1.0.7.tar.gz"
-  sha256 "1e2b0b3d80a3488732108ffe3813e524247040af04d84fab974d070c62ca0db5"  # You'll calculate this after creating the release
+  sha256 "406fb056168004a282c6e328a317f7e6d773e7a93e2e93ec7f1c0b76320b992f"
   license "MIT"
   head "https://github.com/Tanayk07/codeprint.git", branch: "main"
 
