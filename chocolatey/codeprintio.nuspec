@@ -7,7 +7,7 @@
     <authors>Tanay Kedia</authors>
     <owners>Tanay Kedia</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <license type="expression">MIT</license>
+    <licenseUrl>https://github.com/Tanayk07/codeprint/blob/main/LICENSE</licenseUrl>
     <projectUrl>https://github.com/Tanayk07/codeprint</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/Tanayk07/codeprint/main/docs/icon.png</iconUrl>
     <description>A powerful cross-platform CLI tool that creates comprehensive AI-ready snapshots of your codebase. Perfect for use with ChatGPT, Claude, Gemini, and other AI assistants. Features smart project detection, multiple output formats, clipboard integration, and beautiful CLI interface.</description>
