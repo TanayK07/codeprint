@@ -1,7 +1,7 @@
 class Codeprintio < Formula
   desc "A powerful cross-platform tool for creating AI-ready project snapshots"
   homepage "https://github.com/Tanayk07/codeprint"
-  url "https://github.com/Tanayk07/codeprint/archive/v1.0.5.tar.gz"
+  url "https://github.com/Tanayk07/codeprint/archive/v1.0.6.tar.gz"
   sha256 "YOUR_SHA256_HERE"
   license "MIT"
 
