@@ -9,13 +9,15 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/Tanayk07/codeprint</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/Tanayk07/gemini-scanner/main/icon.png</iconUrl>
-    <description>A powerful cross-platform tool for creating AI-ready project snapshots</description>
-    <releaseNotes>https://github.com/Tanayk07/codeprint/releases</releaseNotes>
-    <tags>cli development tools scanner</tags>
+    <iconUrl>https://raw.githubusercontent.com/Tanayk07/codeprint/main/docs/icon.png</iconUrl>
+    <description>A powerful cross-platform CLI tool that creates comprehensive AI-ready snapshots of your codebase. Perfect for use with ChatGPT, Claude, Gemini, and other AI assistants. Features smart project detection, multiple output formats, clipboard integration, and beautiful CLI interface.</description>
+    <releaseNotes>https://github.com/Tanayk07/codeprint/releases/tag/v1.0.6</releaseNotes>
+    <tags>cli development-tools code-scanner ai-tools project-snapshot prompt-engineering codebase-analysis</tags>
     <dependencies>
-      <dependency id="python3" version="3.9.0" />
+      <dependency id="python3" version="3.7.0" />
     </dependencies>
+    <docsUrl>https://github.com/Tanayk07/codeprint#readme</docsUrl>
+    <bugTrackerUrl>https://github.com/Tanayk07/codeprint/issues</bugTrackerUrl>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />

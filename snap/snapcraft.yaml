@@ -1,30 +1,45 @@
 name: codeprintio
-version: \'1.0.6\'
-summary: A powerful cross-platform tool for creating AI-ready project snapshots
+version: '1.0.6'
+summary: AI-ready code snapshots for any project
 description: |
-  CodePrint is a high-performance, cross-platform CLI tool that creates
-  comprehensive snapshots of your codebase for use with AI assistants like
-  ChatGPT, Claude, and Gemini. It automatically detects project types,
-  respects .gitignore rules, and generates output in multiple formats.
+  CodePrint is a powerful cross-platform CLI tool that creates comprehensive 
+  snapshots of your codebase for use with AI assistants like ChatGPT, Claude, 
+  and Gemini. It automatically detects project types, respects .gitignore rules, 
+  and generates output in multiple formats.
+
+  Features:
+  - Lightning fast parallel processing
+  - Smart project type detection
+  - Multiple output formats (TXT, MCP)
+  - Clipboard integration
+  - Gitignore support
+  - Beautiful CLI with progress indicators
+  - Cross-platform compatibility
 
 grade: stable
 confinement: strict
-base: core20
+base: core22
+license: MIT
 
 apps:
-  codeprint:
+  codeprintio:
     command: bin/codeprint
+    aliases: [codeprint, codep]
     plugs:
       - home
       - removable-media
       - network
 
 parts:
-  codeprint:
+  codeprintio:
     plugin: python
     source: .
-    python-packages:
-      - colorama
-      - pyperclip
+    python-requirements:
+      - requirements.txt
     stage-packages:
       - python3-minimal
+      - xclip  # For clipboard support on Linux
+    override-build: |
+      craftctl default
+      # Ensure the CLI script is executable
+      chmod +x $CRAFT_PART_INSTALL/bin/codeprint

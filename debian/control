@@ -1,0 +1,38 @@
+Source: codeprintio
+Section: utils
+Priority: optional
+Maintainer: Tanay Kedia <tkedia7@gmail.com>
+Build-Depends: debhelper (>= 10), 
+               python3-setuptools, 
+               python3-all, 
+               dh-python,
+               python3-pip
+Standards-Version: 4.5.0
+Homepage: https://github.com/Tanayk07/codeprint
+Vcs-Git: https://github.com/Tanayk07/codeprint.git
+Vcs-Browser: https://github.com/Tanayk07/codeprint
+
+Package: codeprintio
+Architecture: all
+Depends: ${python3:Depends}, 
+         ${misc:Depends}, 
+         python3-colorama (>= 0.4.4),
+         python3-pyperclip (>= 1.8.2),
+         xclip
+Suggests: python3-pip
+Description: AI-ready code snapshots for any project
+ CodePrint is a powerful cross-platform CLI tool that creates comprehensive
+ snapshots of your codebase for use with AI assistants like ChatGPT, Claude,
+ and Gemini.
+ .
+ Features include:
+  - Lightning fast parallel processing
+  - Smart project type detection
+  - Multiple output formats (TXT, MCP)
+  - Clipboard integration with xclip support
+  - Gitignore pattern support
+  - Beautiful CLI with progress indicators
+  - Cross-platform compatibility
+ .
+ Perfect for prompt engineering and sharing code context with AI assistants.
+ 
