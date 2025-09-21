@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>codeprintio</id>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <title>CodePrint IO</title>
     <authors>Tanay Kedia</authors>
     <owners>Tanay Kedia</owners>
@@ -11,7 +11,7 @@
     <projectUrl>https://github.com/Tanayk07/codeprint</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/Tanayk07/codeprint/main/docs/icon.png</iconUrl>
     <description>A powerful cross-platform CLI tool that creates comprehensive AI-ready snapshots of your codebase. Perfect for use with ChatGPT, Claude, Gemini, and other AI assistants. Features smart project detection, multiple output formats, clipboard integration, and beautiful CLI interface.</description>
-    <releaseNotes>https://github.com/Tanayk07/codeprint/releases/tag/v1.0.6</releaseNotes>
+    <releaseNotes>https://github.com/Tanayk07/codeprint/releases/tag/v1.0.7</releaseNotes>
     <tags>cli development-tools code-scanner ai-tools project-snapshot prompt-engineering codebase-analysis</tags>
     <dependencies>
       <dependency id="python3" version="3.7.0" />

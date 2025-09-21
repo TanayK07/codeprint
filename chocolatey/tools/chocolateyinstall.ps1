@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 
 $packageName = 'codeprintio'
-$packageVersion = '1.0.6'
+$packageVersion = '1.0.7'
 
 Write-Host "Installing CodePrint v$packageVersion..." -ForegroundColor Green
 

@@ -1,20 +1,10 @@
-codeprintio (1.0.6-1) focal; urgency=medium
+codeprintio (1.0.7-1) focal; urgency=medium
 
-  * New upstream release 1.0.6
-  * Enhanced project type detection
-  * Improved clipboard support
-  * Bug fixes and performance improvements
-  * Better error handling and user experience
+  * New upstream release 1.0.7
+  * Enhanced stability and performance
+  * Bug fixes and improvements
+  * Updated package dependencies
 
- -- Tanay Kedia <tkedia7@gmail.com>  Sun, 21 Sep 2025 12:00:00 +0000
+ -- Tanay Kedia <tkedia7@gmail.com>  Sun, 21 Sep 2025 21:00:21 +0530
 
-codeprintio (1.0.5-1) focal; urgency=medium
 
-  * Initial release to PPA
-  * AI-ready code snapshot generation
-  * Multiple output formats (TXT, MCP)
-  * Cross-platform clipboard support
-  * Smart project type detection
-
- -- Tanay Kedia <tkedia7@gmail.com>  Sat, 20 Sep 2025 12:00:00 +0000
- 

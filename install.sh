@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 # ASCII Banner
 print_banner() {
     echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║               🚀 CODEPRINT INSTALLER v1.0.6                   ║${NC}"
+    echo -e "${BLUE}║               🚀 CODEPRINT INSTALLER v1.0.7                   ║${NC}"
     echo -e "${BLUE}║           AI-Ready Code Snapshots for Any Project             ║${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
