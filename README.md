@@ -8,7 +8,10 @@
 A blazing-fast, cross-platform CLI tool that creates comprehensive AI-ready snapshots of your codebase. Perfect for use with ChatGPT, Claude, Gemini, and other AI assistants.
 
 <div align="center">
-  <img src="docs/demo.gif" alt="CodePrint Demo" width="600">
+  <!-- Video demo placeholder -->
+  <br>
+  <p><em>Demo video coming soon</em></p>
+  <br>
 </div>
 
 ## ✨ Features
@@ -40,43 +43,48 @@ iwr -useb https://raw.githubusercontent.com/Tanayk07/codeprint/main/install.ps1 
 
 ### Package Managers
 
-#### pip (Python)
+#### pip (Python) ✅
 ```bash
 pip install codeprintio
 ```
 
-#### npm (Node.js)
+#### npm (Node.js) ✅
 ```bash
 npm install -g codeprintio
 ```
 
-#### Homebrew (macOS)
+#### Chocolatey (Windows) ✅
+```powershell
+choco install codeprintio
+```
+<!---
+#### Homebrew (macOS) 🔄
 ```bash
+# Coming Soon
 brew tap Tanayk07/codeprint
 brew install codeprintio
 ```
 
-#### Chocolatey (Windows)
+#### WinGet (Windows) 🔄
 ```powershell
-choco install codeprintio
-```
-
-#### WinGet (Windows)
-```powershell
+# Coming Soon
 winget install codeprintio
 ```
 
-#### Snap (Linux)
+#### Snap (Linux) 🔄
 ```bash
-sudo sudo snap install codeprintio
+# Coming Soon
+sudo snap install codeprintio
 ```
 
-#### APT (Debian/Ubuntu)
+#### APT (Debian/Ubuntu) 🔄
 ```bash
-sudo add-apt-repository ppa:Tanayk07/codeprint
+# Coming Soon
+sudo add-apt-repository ppa:tanayk07/codeprint
 sudo apt update
-sudo sudo apt install codeprintio
+sudo apt install codeprintio
 ```
+--->
 
 ## 🚀 Quick Start
 
