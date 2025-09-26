@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Copy, ArrowRight, CheckCircle, Sparkles, Code, FileText, Star } from "lucide-react"
 
@@ -8,6 +8,8 @@ export function HeroSection() {
   const [typedText, setTypedText] = useState("")
   const [copied, setCopied] = useState(false)
   const [starCount, setStarCount] = useState<number | null>(null)
+  const [isVibrating, setIsVibrating] = useState(false)
+  const titleRef = useRef<HTMLDivElement>(null)
   const fullText = "Transform any codebase into AI-ready snapshots"
 
   useEffect(() => {
@@ -50,6 +52,23 @@ export function HeroSection() {
     }
   }
 
+  const handleTitleClick = (e: React.MouseEvent) => {
+    // Create ripple effect
+    const ripple = document.createElement('div')
+    ripple.className = 'ripple'
+    const rect = e.currentTarget.getBoundingClientRect()
+    ripple.style.left = `${e.clientX - rect.left}px`
+    ripple.style.top = `${e.clientY - rect.top}px`
+    e.currentTarget.querySelector('.ripple-container')?.appendChild(ripple)
+    
+    // Trigger vibration
+    setIsVibrating(true)
+    setTimeout(() => setIsVibrating(false), 500)
+    
+    // Remove ripple after animation
+    setTimeout(() => ripple.remove(), 1000)
+  }
+
   return (
     <section className="py-20 md:py-32 px-6 text-center relative overflow-hidden">
       <div className="absolute inset-0 retro-grid opacity-30"></div>
@@ -61,17 +80,65 @@ export function HeroSection() {
             <span className="text-sm font-medium">Now with parallel processing & MCP format support</span>
           </div>
 
-          <div className="mb-6">
-            <pre className="text-sm md:text-base lg:text-lg font-mono text-primary retro-text-shadow leading-tight">
-              {`
- ██████╗ ██████╗ ██████╗ ███████╗██████╗ ██████╗ ██╗███╗   ██╗████████╗
-██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝
-██║     ██║   ██║██║  ██║█████╗  ██████╔╝██████╔╝██║██╔██╗ ██║   ██║   
-██║     ██║   ██║██║  ██║██╔══╝  ██╔═══╝ ██╔══██╗██║██║╚██╗██║   ██║   
-╚██████╗╚██████╔╝██████╔╝███████╗██║     ██║  ██║██║██║ ╚████║   ██║   
- ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝   
-`}
-            </pre>
+          <div className="mb-8">
+            {/* Ultra cool animated title with multiple effects */}
+            <div 
+              className={`relative inline-block group cursor-pointer ${isVibrating ? 'vibrating' : ''}`}
+              onClick={handleTitleClick}
+              ref={titleRef}
+            >
+              {/* Background glow effect */}
+              <div className="absolute inset-0 blur-3xl opacity-30">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary animate-pulse"></div>
+              </div>
+              
+              {/* Main title with cyber effect */}
+              <h1 className="relative">
+                <div className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter">
+                  {/* Animated gradient text */}
+                  <span className="cyber-text inline-block transition-all duration-300 hover:scale-110" data-text="CODE">
+                    CODE
+                    <span className="matrix-container absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100">
+                      <span className="matrix-char">0</span>
+                      <span className="matrix-char">1</span>
+                      <span className="matrix-char">0</span>
+                      <span className="matrix-char">1</span>
+                      <span className="matrix-char">1</span>
+                      <span className="matrix-char">0</span>
+                      <span className="matrix-char">1</span>
+                      <span className="matrix-char">0</span>
+                    </span>
+                  </span>
+                  <span className="neon-text inline-block ml-2 md:ml-4 transition-all duration-300 hover:scale-110" data-text="PRINT">
+                    PRINT
+                    <span className="explosion-container absolute inset-0 pointer-events-none">
+                      <span className="explosion-particle"></span>
+                      <span className="explosion-particle"></span>
+                      <span className="explosion-particle"></span>
+                      <span className="explosion-particle"></span>
+                      <span className="explosion-particle"></span>
+                      <span className="explosion-particle"></span>
+                    </span>
+                  </span>
+                </div>
+              </h1>
+
+              {/* Animated underline effect */}
+              <div className="mt-4 flex items-center justify-center gap-2">
+                <div className="scanner-line"></div>
+              </div>
+
+              {/* Floating particles */}
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="particle particle-1"></div>
+                <div className="particle particle-2"></div>
+                <div className="particle particle-3"></div>
+                <div className="particle particle-4"></div>
+              </div>
+
+              {/* Click ripple effect container */}
+              <div className="ripple-container absolute inset-0 pointer-events-none"></div>
+            </div>
           </div>
 
           <div className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-8 min-h-[3rem] flex items-center justify-center">

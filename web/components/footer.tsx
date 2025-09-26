@@ -5,16 +5,6 @@ export function Footer() {
   return (
     <footer className="py-12 px-4 border-t border-border bg-card/20">
       <div className="container mx-auto max-w-6xl">
-        {/* ASCII Art */}
-        <div className="text-center mb-8 text-primary/30 font-mono text-xs">
-          <pre>
-            {`
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║                            Thank you for using CodePrint!                    ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
-`}
-          </pre>
-        </div>
 
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
