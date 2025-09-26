@@ -84,8 +84,11 @@ export function Header() {
               {starCount && <span className="ml-1 bg-muted px-2 py-1 rounded text-xs">{starCount}</span>}
             </a>
           </Button>
-          <Button size="sm" className="retro-border retro-shadow hover-lift bg-primary text-primary-foreground">
+          <Button size="sm" asChild className="retro-border retro-shadow hover-lift bg-primary text-primary-foreground">
+              <a href="https://github.com/TanayK07/codeprint" target="_blank" rel="noopener noreferrer">
+
             Get Started
+            </a>
           </Button>
 
           {/* Mobile menu button */}
