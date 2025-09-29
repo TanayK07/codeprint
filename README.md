@@ -10,7 +10,12 @@ A blazing-fast, cross-platform CLI tool that creates comprehensive AI-ready snap
 <div align="center">
   <!-- Video demo placeholder -->
   <br>
-  <p><em>Demo video coming soon</em></p>
+  <!-- <p><em>Demo video coming soon</em></p> -->
+  
+
+https://github.com/user-attachments/assets/dc0b3ddf-ab34-423a-9afd-0b7b36869693
+
+
   <br>
 </div>
 
