@@ -279,6 +279,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [![Star History Chart](https://api.star-history.com/svg?repos=Tanayk07/codeprint&type=Date)](https://star-history.com/#Tanayk07/codeprint&Date)
 
 ---
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/Tanayk07)
+
 
 <div align="center">
 Made with ❤️ for the AI community
